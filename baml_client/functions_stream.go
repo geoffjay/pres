@@ -42,8 +42,8 @@ func (s *StreamValue[TStream, TFinal]) Stream() *TStream {
 	return s.as_stream
 }
 
-// / Streaming version of ExtractResume
-func (*stream) ExtractResume(ctx context.Context, resume string, opts ...CallOptionFunc) (<-chan StreamValue[stream_types.Resume, types.Resume], error) {
+// / Streaming version of GeneratePresentation
+func (*stream) GeneratePresentation(ctx context.Context, description string, qa_responses []string, today_date string, opts ...CallOptionFunc) (<-chan StreamValue[stream_types.Presentation, types.Presentation], error) {
 
 	var callOpts callOption
 	for _, opt := range opts {
@@ -51,7 +51,7 @@ func (*stream) ExtractResume(ctx context.Context, resume string, opts ...CallOpt
 	}
 
 	args := baml.BamlFunctionArguments{
-		Kwargs: map[string]any{"resume": resume},
+		Kwargs: map[string]any{"description": description, "qa_responses": qa_responses, "today_date": today_date},
 		Env:    getEnvVars(callOpts.env),
 	}
 
@@ -75,20 +75,20 @@ func (*stream) ExtractResume(ctx context.Context, resume string, opts ...CallOpt
 	if err != nil {
 		// This should never happen. if it does, please file an issue at https://github.com/boundaryml/baml/issues
 		// and include the type of the args you're passing in.
-		wrapped_err := fmt.Errorf("BAML INTERNAL ERROR: ExtractResume: %w", err)
+		wrapped_err := fmt.Errorf("BAML INTERNAL ERROR: GeneratePresentation: %w", err)
 		panic(wrapped_err)
 	}
 
-	internal_channel, err := bamlRuntime.CallFunctionStream(ctx, "ExtractResume", encoded, callOpts.onTick)
+	internal_channel, err := bamlRuntime.CallFunctionStream(ctx, "GeneratePresentation", encoded, callOpts.onTick)
 	if err != nil {
 		return nil, err
 	}
 
-	channel := make(chan StreamValue[stream_types.Resume, types.Resume])
+	channel := make(chan StreamValue[stream_types.Presentation, types.Presentation])
 	go func() {
 		for result := range internal_channel {
 			if result.Error != nil {
-				channel <- StreamValue[stream_types.Resume, types.Resume]{
+				channel <- StreamValue[stream_types.Presentation, types.Presentation]{
 					IsError: true,
 					Error:   result.Error,
 				}
@@ -96,14 +96,236 @@ func (*stream) ExtractResume(ctx context.Context, resume string, opts ...CallOpt
 				return
 			}
 			if result.HasData {
-				data := (result.Data).(types.Resume)
-				channel <- StreamValue[stream_types.Resume, types.Resume]{
+				data := (result.Data).(types.Presentation)
+				channel <- StreamValue[stream_types.Presentation, types.Presentation]{
 					IsFinal:  true,
 					as_final: &data,
 				}
 			} else {
-				data := (result.StreamData).(stream_types.Resume)
-				channel <- StreamValue[stream_types.Resume, types.Resume]{
+				data := (result.StreamData).(stream_types.Presentation)
+				channel <- StreamValue[stream_types.Presentation, types.Presentation]{
+					IsFinal:   false,
+					as_stream: &data,
+				}
+			}
+		}
+
+		// when internal_channel is closed, close the output too
+		close(channel)
+	}()
+	return channel, nil
+}
+
+// / Streaming version of GenerateUpdateOperations
+func (*stream) GenerateUpdateOperations(ctx context.Context, update_request string, current_presentation string, qa_responses []string, opts ...CallOptionFunc) (<-chan StreamValue[[]stream_types.PresentationUpdate, []types.PresentationUpdate], error) {
+
+	var callOpts callOption
+	for _, opt := range opts {
+		opt(&callOpts)
+	}
+
+	args := baml.BamlFunctionArguments{
+		Kwargs: map[string]any{"update_request": update_request, "current_presentation": current_presentation, "qa_responses": qa_responses},
+		Env:    getEnvVars(callOpts.env),
+	}
+
+	if callOpts.clientRegistry != nil {
+		args.ClientRegistry = callOpts.clientRegistry
+	}
+
+	if callOpts.collectors != nil {
+		args.Collectors = callOpts.collectors
+	}
+
+	if callOpts.typeBuilder != nil {
+		args.TypeBuilder = callOpts.typeBuilder
+	}
+
+	if callOpts.tags != nil {
+		args.Tags = callOpts.tags
+	}
+
+	encoded, err := args.Encode()
+	if err != nil {
+		// This should never happen. if it does, please file an issue at https://github.com/boundaryml/baml/issues
+		// and include the type of the args you're passing in.
+		wrapped_err := fmt.Errorf("BAML INTERNAL ERROR: GenerateUpdateOperations: %w", err)
+		panic(wrapped_err)
+	}
+
+	internal_channel, err := bamlRuntime.CallFunctionStream(ctx, "GenerateUpdateOperations", encoded, callOpts.onTick)
+	if err != nil {
+		return nil, err
+	}
+
+	channel := make(chan StreamValue[[]stream_types.PresentationUpdate, []types.PresentationUpdate])
+	go func() {
+		for result := range internal_channel {
+			if result.Error != nil {
+				channel <- StreamValue[[]stream_types.PresentationUpdate, []types.PresentationUpdate]{
+					IsError: true,
+					Error:   result.Error,
+				}
+				close(channel)
+				return
+			}
+			if result.HasData {
+				data := (result.Data).([]types.PresentationUpdate)
+				channel <- StreamValue[[]stream_types.PresentationUpdate, []types.PresentationUpdate]{
+					IsFinal:  true,
+					as_final: &data,
+				}
+			} else {
+				data := (result.StreamData).([]stream_types.PresentationUpdate)
+				channel <- StreamValue[[]stream_types.PresentationUpdate, []types.PresentationUpdate]{
+					IsFinal:   false,
+					as_stream: &data,
+				}
+			}
+		}
+
+		// when internal_channel is closed, close the output too
+		close(channel)
+	}()
+	return channel, nil
+}
+
+// / Streaming version of PrepareCreatePresentation
+func (*stream) PrepareCreatePresentation(ctx context.Context, description string, iteration int64, previous_responses []string, opts ...CallOptionFunc) (<-chan StreamValue[stream_types.PresentationPreparation, types.PresentationPreparation], error) {
+
+	var callOpts callOption
+	for _, opt := range opts {
+		opt(&callOpts)
+	}
+
+	args := baml.BamlFunctionArguments{
+		Kwargs: map[string]any{"description": description, "iteration": iteration, "previous_responses": previous_responses},
+		Env:    getEnvVars(callOpts.env),
+	}
+
+	if callOpts.clientRegistry != nil {
+		args.ClientRegistry = callOpts.clientRegistry
+	}
+
+	if callOpts.collectors != nil {
+		args.Collectors = callOpts.collectors
+	}
+
+	if callOpts.typeBuilder != nil {
+		args.TypeBuilder = callOpts.typeBuilder
+	}
+
+	if callOpts.tags != nil {
+		args.Tags = callOpts.tags
+	}
+
+	encoded, err := args.Encode()
+	if err != nil {
+		// This should never happen. if it does, please file an issue at https://github.com/boundaryml/baml/issues
+		// and include the type of the args you're passing in.
+		wrapped_err := fmt.Errorf("BAML INTERNAL ERROR: PrepareCreatePresentation: %w", err)
+		panic(wrapped_err)
+	}
+
+	internal_channel, err := bamlRuntime.CallFunctionStream(ctx, "PrepareCreatePresentation", encoded, callOpts.onTick)
+	if err != nil {
+		return nil, err
+	}
+
+	channel := make(chan StreamValue[stream_types.PresentationPreparation, types.PresentationPreparation])
+	go func() {
+		for result := range internal_channel {
+			if result.Error != nil {
+				channel <- StreamValue[stream_types.PresentationPreparation, types.PresentationPreparation]{
+					IsError: true,
+					Error:   result.Error,
+				}
+				close(channel)
+				return
+			}
+			if result.HasData {
+				data := (result.Data).(types.PresentationPreparation)
+				channel <- StreamValue[stream_types.PresentationPreparation, types.PresentationPreparation]{
+					IsFinal:  true,
+					as_final: &data,
+				}
+			} else {
+				data := (result.StreamData).(stream_types.PresentationPreparation)
+				channel <- StreamValue[stream_types.PresentationPreparation, types.PresentationPreparation]{
+					IsFinal:   false,
+					as_stream: &data,
+				}
+			}
+		}
+
+		// when internal_channel is closed, close the output too
+		close(channel)
+	}()
+	return channel, nil
+}
+
+// / Streaming version of PrepareUpdatePresentation
+func (*stream) PrepareUpdatePresentation(ctx context.Context, update_request string, current_presentation string, iteration int64, previous_responses []string, opts ...CallOptionFunc) (<-chan StreamValue[stream_types.PresentationPreparation, types.PresentationPreparation], error) {
+
+	var callOpts callOption
+	for _, opt := range opts {
+		opt(&callOpts)
+	}
+
+	args := baml.BamlFunctionArguments{
+		Kwargs: map[string]any{"update_request": update_request, "current_presentation": current_presentation, "iteration": iteration, "previous_responses": previous_responses},
+		Env:    getEnvVars(callOpts.env),
+	}
+
+	if callOpts.clientRegistry != nil {
+		args.ClientRegistry = callOpts.clientRegistry
+	}
+
+	if callOpts.collectors != nil {
+		args.Collectors = callOpts.collectors
+	}
+
+	if callOpts.typeBuilder != nil {
+		args.TypeBuilder = callOpts.typeBuilder
+	}
+
+	if callOpts.tags != nil {
+		args.Tags = callOpts.tags
+	}
+
+	encoded, err := args.Encode()
+	if err != nil {
+		// This should never happen. if it does, please file an issue at https://github.com/boundaryml/baml/issues
+		// and include the type of the args you're passing in.
+		wrapped_err := fmt.Errorf("BAML INTERNAL ERROR: PrepareUpdatePresentation: %w", err)
+		panic(wrapped_err)
+	}
+
+	internal_channel, err := bamlRuntime.CallFunctionStream(ctx, "PrepareUpdatePresentation", encoded, callOpts.onTick)
+	if err != nil {
+		return nil, err
+	}
+
+	channel := make(chan StreamValue[stream_types.PresentationPreparation, types.PresentationPreparation])
+	go func() {
+		for result := range internal_channel {
+			if result.Error != nil {
+				channel <- StreamValue[stream_types.PresentationPreparation, types.PresentationPreparation]{
+					IsError: true,
+					Error:   result.Error,
+				}
+				close(channel)
+				return
+			}
+			if result.HasData {
+				data := (result.Data).(types.PresentationPreparation)
+				channel <- StreamValue[stream_types.PresentationPreparation, types.PresentationPreparation]{
+					IsFinal:  true,
+					as_final: &data,
+				}
+			} else {
+				data := (result.StreamData).(stream_types.PresentationPreparation)
+				channel <- StreamValue[stream_types.PresentationPreparation, types.PresentationPreparation]{
 					IsFinal:   false,
 					as_stream: &data,
 				}

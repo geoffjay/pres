@@ -25,8 +25,8 @@ type parse struct{}
 
 var Parse = &parse{}
 
-// / Parse version of ExtractResume (Takes in string and returns types.Resume)
-func (*parse) ExtractResume(text string, opts ...CallOptionFunc) (types.Resume, error) {
+// / Parse version of GeneratePresentation (Takes in string and returns types.Presentation)
+func (*parse) GeneratePresentation(text string, opts ...CallOptionFunc) (types.Presentation, error) {
 
 	var callOpts callOption
 	for _, opt := range opts {
@@ -58,16 +58,157 @@ func (*parse) ExtractResume(text string, opts ...CallOptionFunc) (types.Resume, 
 	if err != nil {
 		// This should never happen. if it does, please file an issue at https://github.com/boundaryml/baml/issues
 		// and include the type of the args you're passing in.
-		wrapped_err := fmt.Errorf("BAML INTERNAL ERROR: ExtractResume: %w", err)
+		wrapped_err := fmt.Errorf("BAML INTERNAL ERROR: GeneratePresentation: %w", err)
 		panic(wrapped_err)
 	}
 
-	result, err := bamlRuntime.CallFunctionParse(context.Background(), "ExtractResume", encoded)
+	result, err := bamlRuntime.CallFunctionParse(context.Background(), "GeneratePresentation", encoded)
 	if err != nil {
-		return types.Resume{}, err
+		return types.Presentation{}, err
 	}
 
-	casted := (result).(types.Resume)
+	casted := (result).(types.Presentation)
+
+	return casted, nil
+}
+
+// / Parse version of GenerateUpdateOperations (Takes in string and returns []types.PresentationUpdate)
+func (*parse) GenerateUpdateOperations(text string, opts ...CallOptionFunc) ([]types.PresentationUpdate, error) {
+
+	var callOpts callOption
+	for _, opt := range opts {
+		opt(&callOpts)
+	}
+
+	args := baml.BamlFunctionArguments{
+		Kwargs: map[string]any{"text": text, "stream": false},
+		Env:    getEnvVars(callOpts.env),
+	}
+
+	if callOpts.clientRegistry != nil {
+		args.ClientRegistry = callOpts.clientRegistry
+	}
+
+	if callOpts.collectors != nil {
+		args.Collectors = callOpts.collectors
+	}
+
+	if callOpts.typeBuilder != nil {
+		args.TypeBuilder = callOpts.typeBuilder
+	}
+
+	if callOpts.tags != nil {
+		args.Tags = callOpts.tags
+	}
+
+	encoded, err := args.Encode()
+	if err != nil {
+		// This should never happen. if it does, please file an issue at https://github.com/boundaryml/baml/issues
+		// and include the type of the args you're passing in.
+		wrapped_err := fmt.Errorf("BAML INTERNAL ERROR: GenerateUpdateOperations: %w", err)
+		panic(wrapped_err)
+	}
+
+	result, err := bamlRuntime.CallFunctionParse(context.Background(), "GenerateUpdateOperations", encoded)
+	if err != nil {
+		return nil, err
+	}
+
+	casted := (result).([]types.PresentationUpdate)
+
+	return casted, nil
+}
+
+// / Parse version of PrepareCreatePresentation (Takes in string and returns types.PresentationPreparation)
+func (*parse) PrepareCreatePresentation(text string, opts ...CallOptionFunc) (types.PresentationPreparation, error) {
+
+	var callOpts callOption
+	for _, opt := range opts {
+		opt(&callOpts)
+	}
+
+	args := baml.BamlFunctionArguments{
+		Kwargs: map[string]any{"text": text, "stream": false},
+		Env:    getEnvVars(callOpts.env),
+	}
+
+	if callOpts.clientRegistry != nil {
+		args.ClientRegistry = callOpts.clientRegistry
+	}
+
+	if callOpts.collectors != nil {
+		args.Collectors = callOpts.collectors
+	}
+
+	if callOpts.typeBuilder != nil {
+		args.TypeBuilder = callOpts.typeBuilder
+	}
+
+	if callOpts.tags != nil {
+		args.Tags = callOpts.tags
+	}
+
+	encoded, err := args.Encode()
+	if err != nil {
+		// This should never happen. if it does, please file an issue at https://github.com/boundaryml/baml/issues
+		// and include the type of the args you're passing in.
+		wrapped_err := fmt.Errorf("BAML INTERNAL ERROR: PrepareCreatePresentation: %w", err)
+		panic(wrapped_err)
+	}
+
+	result, err := bamlRuntime.CallFunctionParse(context.Background(), "PrepareCreatePresentation", encoded)
+	if err != nil {
+		return types.PresentationPreparation{}, err
+	}
+
+	casted := (result).(types.PresentationPreparation)
+
+	return casted, nil
+}
+
+// / Parse version of PrepareUpdatePresentation (Takes in string and returns types.PresentationPreparation)
+func (*parse) PrepareUpdatePresentation(text string, opts ...CallOptionFunc) (types.PresentationPreparation, error) {
+
+	var callOpts callOption
+	for _, opt := range opts {
+		opt(&callOpts)
+	}
+
+	args := baml.BamlFunctionArguments{
+		Kwargs: map[string]any{"text": text, "stream": false},
+		Env:    getEnvVars(callOpts.env),
+	}
+
+	if callOpts.clientRegistry != nil {
+		args.ClientRegistry = callOpts.clientRegistry
+	}
+
+	if callOpts.collectors != nil {
+		args.Collectors = callOpts.collectors
+	}
+
+	if callOpts.typeBuilder != nil {
+		args.TypeBuilder = callOpts.typeBuilder
+	}
+
+	if callOpts.tags != nil {
+		args.Tags = callOpts.tags
+	}
+
+	encoded, err := args.Encode()
+	if err != nil {
+		// This should never happen. if it does, please file an issue at https://github.com/boundaryml/baml/issues
+		// and include the type of the args you're passing in.
+		wrapped_err := fmt.Errorf("BAML INTERNAL ERROR: PrepareUpdatePresentation: %w", err)
+		panic(wrapped_err)
+	}
+
+	result, err := bamlRuntime.CallFunctionParse(context.Background(), "PrepareUpdatePresentation", encoded)
+	if err != nil {
+		return types.PresentationPreparation{}, err
+	}
+
+	casted := (result).(types.PresentationPreparation)
 
 	return casted, nil
 }

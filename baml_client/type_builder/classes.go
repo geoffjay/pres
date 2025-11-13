@@ -15,11 +15,11 @@ package type_builder
 
 import baml "github.com/boundaryml/baml/engine/language_client_go/pkg"
 
-type ResumeClassView struct {
+type PresentationClassView struct {
 	inner baml.ClassBuilder
 }
 
-func (t *ResumeClassView) ListProperties() ([]ClassPropertyView, error) {
+func (t *PresentationClassView) ListProperties() ([]ClassPropertyView, error) {
 	result, err := t.inner.ListProperties()
 	if err != nil {
 		return nil, err
@@ -31,30 +31,230 @@ func (t *ResumeClassView) ListProperties() ([]ClassPropertyView, error) {
 	return builders, nil
 }
 
-func (t *ResumeClassView) PropertyName() (ClassPropertyView, error) {
-	return t.inner.Property("name")
+func (t *PresentationClassView) PropertyTitle() (ClassPropertyView, error) {
+	return t.inner.Property("title")
 }
 
-func (t *ResumeClassView) PropertyEmail() (ClassPropertyView, error) {
-	return t.inner.Property("email")
+func (t *PresentationClassView) PropertySubtitle() (ClassPropertyView, error) {
+	return t.inner.Property("subtitle")
 }
 
-func (t *ResumeClassView) PropertyExperience() (ClassPropertyView, error) {
-	return t.inner.Property("experience")
+func (t *PresentationClassView) PropertyAuthor() (ClassPropertyView, error) {
+	return t.inner.Property("author")
 }
 
-func (t *ResumeClassView) PropertySkills() (ClassPropertyView, error) {
-	return t.inner.Property("skills")
+func (t *PresentationClassView) PropertyDate() (ClassPropertyView, error) {
+	return t.inner.Property("date")
 }
 
-func (t *TypeBuilder) Resume() (*ResumeClassView, error) {
-	bld, err := t.inner.Class("Resume")
+func (t *PresentationClassView) PropertyTheme() (ClassPropertyView, error) {
+	return t.inner.Property("theme")
+}
+
+func (t *PresentationClassView) PropertySlides() (ClassPropertyView, error) {
+	return t.inner.Property("slides")
+}
+
+func (t *PresentationClassView) PropertyTags() (ClassPropertyView, error) {
+	return t.inner.Property("tags")
+}
+
+func (t *TypeBuilder) Presentation() (*PresentationClassView, error) {
+	bld, err := t.inner.Class("Presentation")
 	if err != nil {
 		return nil, err
 	}
-	return &ResumeClassView{inner: bld}, nil
+	return &PresentationClassView{inner: bld}, nil
 }
 
-func (t *ResumeClassView) Type() (baml.Type, error) {
+func (t *PresentationClassView) Type() (baml.Type, error) {
+	return t.inner.Type()
+}
+
+type PresentationPreparationClassView struct {
+	inner baml.ClassBuilder
+}
+
+func (t *PresentationPreparationClassView) ListProperties() ([]ClassPropertyView, error) {
+	result, err := t.inner.ListProperties()
+	if err != nil {
+		return nil, err
+	}
+	builders := make([]ClassPropertyView, len(result))
+	for i, p := range result {
+		builders[i] = p
+	}
+	return builders, nil
+}
+
+func (t *PresentationPreparationClassView) PropertyQuestions() (ClassPropertyView, error) {
+	return t.inner.Property("questions")
+}
+
+func (t *PresentationPreparationClassView) PropertyRationale() (ClassPropertyView, error) {
+	return t.inner.Property("rationale")
+}
+
+func (t *PresentationPreparationClassView) PropertyConfidence_score() (ClassPropertyView, error) {
+	return t.inner.Property("confidence_score")
+}
+
+func (t *PresentationPreparationClassView) PropertyConfidence_reasoning() (ClassPropertyView, error) {
+	return t.inner.Property("confidence_reasoning")
+}
+
+func (t *PresentationPreparationClassView) PropertyNeeds_more_info() (ClassPropertyView, error) {
+	return t.inner.Property("needs_more_info")
+}
+
+func (t *TypeBuilder) PresentationPreparation() (*PresentationPreparationClassView, error) {
+	bld, err := t.inner.Class("PresentationPreparation")
+	if err != nil {
+		return nil, err
+	}
+	return &PresentationPreparationClassView{inner: bld}, nil
+}
+
+func (t *PresentationPreparationClassView) Type() (baml.Type, error) {
+	return t.inner.Type()
+}
+
+type PresentationQuestionClassView struct {
+	inner baml.ClassBuilder
+}
+
+func (t *PresentationQuestionClassView) ListProperties() ([]ClassPropertyView, error) {
+	result, err := t.inner.ListProperties()
+	if err != nil {
+		return nil, err
+	}
+	builders := make([]ClassPropertyView, len(result))
+	for i, p := range result {
+		builders[i] = p
+	}
+	return builders, nil
+}
+
+func (t *PresentationQuestionClassView) PropertyQuestion() (ClassPropertyView, error) {
+	return t.inner.Property("question")
+}
+
+func (t *PresentationQuestionClassView) PropertyHelp_text() (ClassPropertyView, error) {
+	return t.inner.Property("help_text")
+}
+
+func (t *PresentationQuestionClassView) PropertyIteration() (ClassPropertyView, error) {
+	return t.inner.Property("iteration")
+}
+
+func (t *TypeBuilder) PresentationQuestion() (*PresentationQuestionClassView, error) {
+	bld, err := t.inner.Class("PresentationQuestion")
+	if err != nil {
+		return nil, err
+	}
+	return &PresentationQuestionClassView{inner: bld}, nil
+}
+
+func (t *PresentationQuestionClassView) Type() (baml.Type, error) {
+	return t.inner.Type()
+}
+
+type PresentationUpdateClassView struct {
+	inner baml.ClassBuilder
+}
+
+func (t *PresentationUpdateClassView) ListProperties() ([]ClassPropertyView, error) {
+	result, err := t.inner.ListProperties()
+	if err != nil {
+		return nil, err
+	}
+	builders := make([]ClassPropertyView, len(result))
+	for i, p := range result {
+		builders[i] = p
+	}
+	return builders, nil
+}
+
+func (t *PresentationUpdateClassView) PropertyOperation() (ClassPropertyView, error) {
+	return t.inner.Property("operation")
+}
+
+func (t *PresentationUpdateClassView) PropertySlide_index() (ClassPropertyView, error) {
+	return t.inner.Property("slide_index")
+}
+
+func (t *PresentationUpdateClassView) PropertyNew_slide() (ClassPropertyView, error) {
+	return t.inner.Property("new_slide")
+}
+
+func (t *PresentationUpdateClassView) PropertyNew_order() (ClassPropertyView, error) {
+	return t.inner.Property("new_order")
+}
+
+func (t *PresentationUpdateClassView) PropertyMetadata_updates() (ClassPropertyView, error) {
+	return t.inner.Property("metadata_updates")
+}
+
+func (t *PresentationUpdateClassView) PropertyRationale() (ClassPropertyView, error) {
+	return t.inner.Property("rationale")
+}
+
+func (t *TypeBuilder) PresentationUpdate() (*PresentationUpdateClassView, error) {
+	bld, err := t.inner.Class("PresentationUpdate")
+	if err != nil {
+		return nil, err
+	}
+	return &PresentationUpdateClassView{inner: bld}, nil
+}
+
+func (t *PresentationUpdateClassView) Type() (baml.Type, error) {
+	return t.inner.Type()
+}
+
+type SlideClassView struct {
+	inner baml.ClassBuilder
+}
+
+func (t *SlideClassView) ListProperties() ([]ClassPropertyView, error) {
+	result, err := t.inner.ListProperties()
+	if err != nil {
+		return nil, err
+	}
+	builders := make([]ClassPropertyView, len(result))
+	for i, p := range result {
+		builders[i] = p
+	}
+	return builders, nil
+}
+
+func (t *SlideClassView) PropertyTitle() (ClassPropertyView, error) {
+	return t.inner.Property("title")
+}
+
+func (t *SlideClassView) PropertyContent() (ClassPropertyView, error) {
+	return t.inner.Property("content")
+}
+
+func (t *SlideClassView) PropertyNotes() (ClassPropertyView, error) {
+	return t.inner.Property("notes")
+}
+
+func (t *SlideClassView) PropertyLayout() (ClassPropertyView, error) {
+	return t.inner.Property("layout")
+}
+
+func (t *SlideClassView) PropertyBackground_color() (ClassPropertyView, error) {
+	return t.inner.Property("background_color")
+}
+
+func (t *TypeBuilder) Slide() (*SlideClassView, error) {
+	bld, err := t.inner.Class("Slide")
+	if err != nil {
+		return nil, err
+	}
+	return &SlideClassView{inner: bld}, nil
+}
+
+func (t *SlideClassView) Type() (baml.Type, error) {
 	return t.inner.Type()
 }

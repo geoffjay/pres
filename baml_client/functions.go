@@ -21,7 +21,7 @@ import (
 	"github.com/geoffjay/pres/baml_client/types"
 )
 
-func ExtractResume(ctx context.Context, resume string, opts ...CallOptionFunc) (types.Resume, error) {
+func GeneratePresentation(ctx context.Context, description string, qa_responses []string, today_date string, opts ...CallOptionFunc) (types.Presentation, error) {
 
 	var callOpts callOption
 	for _, opt := range opts {
@@ -29,7 +29,7 @@ func ExtractResume(ctx context.Context, resume string, opts ...CallOptionFunc) (
 	}
 
 	args := baml.BamlFunctionArguments{
-		Kwargs: map[string]any{"resume": resume},
+		Kwargs: map[string]any{"description": description, "qa_responses": qa_responses, "today_date": today_date},
 		Env:    getEnvVars(callOpts.env),
 	}
 
@@ -55,34 +55,232 @@ func ExtractResume(ctx context.Context, resume string, opts ...CallOptionFunc) (
 	}
 
 	if callOpts.onTick == nil {
-		result, err := bamlRuntime.CallFunction(ctx, "ExtractResume", encoded, callOpts.onTick)
+		result, err := bamlRuntime.CallFunction(ctx, "GeneratePresentation", encoded, callOpts.onTick)
 		if err != nil {
-			return types.Resume{}, err
+			return types.Presentation{}, err
 		}
 
 		if result.Error != nil {
-			return types.Resume{}, result.Error
+			return types.Presentation{}, result.Error
 		}
 
-		casted := (result.Data).(types.Resume)
+		casted := (result.Data).(types.Presentation)
 
 		return casted, nil
 	} else {
-		channel, err := bamlRuntime.CallFunctionStream(ctx, "ExtractResume", encoded, callOpts.onTick)
+		channel, err := bamlRuntime.CallFunctionStream(ctx, "GeneratePresentation", encoded, callOpts.onTick)
 		if err != nil {
-			return types.Resume{}, err
+			return types.Presentation{}, err
 		}
 
 		for result := range channel {
 			if result.Error != nil {
-				return types.Resume{}, result.Error
+				return types.Presentation{}, result.Error
 			}
 
 			if result.HasData {
-				return result.Data.(types.Resume), nil
+				return result.Data.(types.Presentation), nil
 			}
 		}
 
-		return types.Resume{}, fmt.Errorf("No data returned from stream")
+		return types.Presentation{}, fmt.Errorf("No data returned from stream")
+	}
+}
+
+func GenerateUpdateOperations(ctx context.Context, update_request string, current_presentation string, qa_responses []string, opts ...CallOptionFunc) ([]types.PresentationUpdate, error) {
+
+	var callOpts callOption
+	for _, opt := range opts {
+		opt(&callOpts)
+	}
+
+	args := baml.BamlFunctionArguments{
+		Kwargs: map[string]any{"update_request": update_request, "current_presentation": current_presentation, "qa_responses": qa_responses},
+		Env:    getEnvVars(callOpts.env),
+	}
+
+	if callOpts.clientRegistry != nil {
+		args.ClientRegistry = callOpts.clientRegistry
+	}
+
+	if callOpts.collectors != nil {
+		args.Collectors = callOpts.collectors
+	}
+
+	if callOpts.typeBuilder != nil {
+		args.TypeBuilder = callOpts.typeBuilder
+	}
+
+	if callOpts.tags != nil {
+		args.Tags = callOpts.tags
+	}
+
+	encoded, err := args.Encode()
+	if err != nil {
+		panic(err)
+	}
+
+	if callOpts.onTick == nil {
+		result, err := bamlRuntime.CallFunction(ctx, "GenerateUpdateOperations", encoded, callOpts.onTick)
+		if err != nil {
+			return nil, err
+		}
+
+		if result.Error != nil {
+			return nil, result.Error
+		}
+
+		casted := (result.Data).([]types.PresentationUpdate)
+
+		return casted, nil
+	} else {
+		channel, err := bamlRuntime.CallFunctionStream(ctx, "GenerateUpdateOperations", encoded, callOpts.onTick)
+		if err != nil {
+			return nil, err
+		}
+
+		for result := range channel {
+			if result.Error != nil {
+				return nil, result.Error
+			}
+
+			if result.HasData {
+				return result.Data.([]types.PresentationUpdate), nil
+			}
+		}
+
+		return nil, fmt.Errorf("No data returned from stream")
+	}
+}
+
+func PrepareCreatePresentation(ctx context.Context, description string, iteration int64, previous_responses []string, opts ...CallOptionFunc) (types.PresentationPreparation, error) {
+
+	var callOpts callOption
+	for _, opt := range opts {
+		opt(&callOpts)
+	}
+
+	args := baml.BamlFunctionArguments{
+		Kwargs: map[string]any{"description": description, "iteration": iteration, "previous_responses": previous_responses},
+		Env:    getEnvVars(callOpts.env),
+	}
+
+	if callOpts.clientRegistry != nil {
+		args.ClientRegistry = callOpts.clientRegistry
+	}
+
+	if callOpts.collectors != nil {
+		args.Collectors = callOpts.collectors
+	}
+
+	if callOpts.typeBuilder != nil {
+		args.TypeBuilder = callOpts.typeBuilder
+	}
+
+	if callOpts.tags != nil {
+		args.Tags = callOpts.tags
+	}
+
+	encoded, err := args.Encode()
+	if err != nil {
+		panic(err)
+	}
+
+	if callOpts.onTick == nil {
+		result, err := bamlRuntime.CallFunction(ctx, "PrepareCreatePresentation", encoded, callOpts.onTick)
+		if err != nil {
+			return types.PresentationPreparation{}, err
+		}
+
+		if result.Error != nil {
+			return types.PresentationPreparation{}, result.Error
+		}
+
+		casted := (result.Data).(types.PresentationPreparation)
+
+		return casted, nil
+	} else {
+		channel, err := bamlRuntime.CallFunctionStream(ctx, "PrepareCreatePresentation", encoded, callOpts.onTick)
+		if err != nil {
+			return types.PresentationPreparation{}, err
+		}
+
+		for result := range channel {
+			if result.Error != nil {
+				return types.PresentationPreparation{}, result.Error
+			}
+
+			if result.HasData {
+				return result.Data.(types.PresentationPreparation), nil
+			}
+		}
+
+		return types.PresentationPreparation{}, fmt.Errorf("No data returned from stream")
+	}
+}
+
+func PrepareUpdatePresentation(ctx context.Context, update_request string, current_presentation string, iteration int64, previous_responses []string, opts ...CallOptionFunc) (types.PresentationPreparation, error) {
+
+	var callOpts callOption
+	for _, opt := range opts {
+		opt(&callOpts)
+	}
+
+	args := baml.BamlFunctionArguments{
+		Kwargs: map[string]any{"update_request": update_request, "current_presentation": current_presentation, "iteration": iteration, "previous_responses": previous_responses},
+		Env:    getEnvVars(callOpts.env),
+	}
+
+	if callOpts.clientRegistry != nil {
+		args.ClientRegistry = callOpts.clientRegistry
+	}
+
+	if callOpts.collectors != nil {
+		args.Collectors = callOpts.collectors
+	}
+
+	if callOpts.typeBuilder != nil {
+		args.TypeBuilder = callOpts.typeBuilder
+	}
+
+	if callOpts.tags != nil {
+		args.Tags = callOpts.tags
+	}
+
+	encoded, err := args.Encode()
+	if err != nil {
+		panic(err)
+	}
+
+	if callOpts.onTick == nil {
+		result, err := bamlRuntime.CallFunction(ctx, "PrepareUpdatePresentation", encoded, callOpts.onTick)
+		if err != nil {
+			return types.PresentationPreparation{}, err
+		}
+
+		if result.Error != nil {
+			return types.PresentationPreparation{}, result.Error
+		}
+
+		casted := (result.Data).(types.PresentationPreparation)
+
+		return casted, nil
+	} else {
+		channel, err := bamlRuntime.CallFunctionStream(ctx, "PrepareUpdatePresentation", encoded, callOpts.onTick)
+		if err != nil {
+			return types.PresentationPreparation{}, err
+		}
+
+		for result := range channel {
+			if result.Error != nil {
+				return types.PresentationPreparation{}, result.Error
+			}
+
+			if result.HasData {
+				return result.Data.(types.PresentationPreparation), nil
+			}
+		}
+
+		return types.PresentationPreparation{}, fmt.Errorf("No data returned from stream")
 	}
 }

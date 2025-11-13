@@ -1,1 +1,10 @@
+.env
+
+# generated files
+presentations
+
+# AI
 .claude/settings.local.json
+
+# Contrib to give agent access
+contrib

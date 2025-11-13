@@ -21,6 +21,14 @@ import (
 )
 
 var typeMap = map[string]reflect.Type{
-	"TYPES.Resume":        reflect.TypeOf(types.Resume{}),
-	"STREAM_TYPES.Resume": reflect.TypeOf(stream_types.Resume{}),
+	"TYPES.Presentation":                   reflect.TypeOf(types.Presentation{}),
+	"STREAM_TYPES.Presentation":            reflect.TypeOf(stream_types.Presentation{}),
+	"TYPES.PresentationPreparation":        reflect.TypeOf(types.PresentationPreparation{}),
+	"STREAM_TYPES.PresentationPreparation": reflect.TypeOf(stream_types.PresentationPreparation{}),
+	"TYPES.PresentationQuestion":           reflect.TypeOf(types.PresentationQuestion{}),
+	"STREAM_TYPES.PresentationQuestion":    reflect.TypeOf(stream_types.PresentationQuestion{}),
+	"TYPES.PresentationUpdate":             reflect.TypeOf(types.PresentationUpdate{}),
+	"STREAM_TYPES.PresentationUpdate":      reflect.TypeOf(stream_types.PresentationUpdate{}),
+	"TYPES.Slide":                          reflect.TypeOf(types.Slide{}),
+	"STREAM_TYPES.Slide":                   reflect.TypeOf(stream_types.Slide{}),
 }
