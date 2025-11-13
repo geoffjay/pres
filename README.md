@@ -1,6 +1,7 @@
 # pres - AI-Powered Presentation Generator
 
-`pres` is a CLI utility for creating, updating, and generating presentations using AI-powered iterative Q&A and reveal.js.
+`pres` is a CLI utility for creating, updating, and generating presentations using AI-powered iterative Q&A and
+reveal.js.
 
 ## Features
 
@@ -31,6 +32,7 @@ go build -o pres .
 ```
 
 This will:
+
 1. Ask you contextual questions about your presentation
 2. Use AI to determine if more information is needed
 3. Generate slides based on your responses
@@ -43,6 +45,7 @@ This will:
 ```
 
 This will:
+
 1. Load your existing presentation
 2. Ask clarifying questions about the update
 3. Apply the changes intelligently
@@ -55,6 +58,7 @@ This will:
 ```
 
 This will:
+
 1. Load your presentation JSON
 2. Generate a reveal.js HTML file
 3. Output to `presentations/my-talk.html`
@@ -79,10 +83,12 @@ python3 -m http.server 8000
 Create a new presentation with an interactive Q&A process.
 
 **Flags:**
+
 - `--author string` - Author name (default: empty)
 - `--output string` - Output path (default: auto-generated from title)
 
 **Examples:**
+
 ```bash
 pres create "Introduction to Go concurrency patterns"
 pres create "Q4 Business Review" --author "Jane Doe"
@@ -94,9 +100,11 @@ pres create "Product Launch" --output presentations/launch.json
 Update an existing presentation using natural language.
 
 **Flags:**
+
 - `--path string` - Path to presentation JSON (required)
 
 **Examples:**
+
 ```bash
 pres update --path presentations/my-talk.json "Add an executive summary slide at the beginning"
 pres update --path presentations/review.json "Change the theme to 'night'"
@@ -108,10 +116,12 @@ pres update --path presentations/intro.json "Add more code examples to the gorou
 Generate reveal.js HTML from a presentation JSON file.
 
 **Flags:**
+
 - `--path string` - Path to presentation JSON (required)
 - `--output string` - Output HTML path (default: same as input with .html extension)
 
 **Examples:**
+
 ```bash
 pres generate --path presentations/my-talk.json
 pres generate --path presentations/review.json --output output/review.html
@@ -155,6 +165,7 @@ Presentations are stored as JSON files with the following structure:
 ## reveal.js Themes
 
 Available themes:
+
 - `black` - Dark background, white text (modern, professional)
 - `white` - White background, dark text (clean, minimal)
 - `league` - Gray background (neutral, versatile)
@@ -231,6 +242,7 @@ export ANTHROPIC_API_KEY=your_key_here
 ```
 
 Sample Q&A:
+
 - **Q**: Who is your target audience?
 - **A**: Intermediate Rust developers familiar with basics
 
@@ -259,6 +271,7 @@ Sample Q&A:
 ## Contributing
 
 This project demonstrates patterns for building AI-powered CLI tools with:
+
 - Iterative Q&A flows
 - Confidence-based information gathering
 - Structured output generation

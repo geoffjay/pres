@@ -5,6 +5,7 @@ This document describes the shared components that can be abstracted out for reu
 ## Overview
 
 Both `pres` and `kb` use similar patterns:
+
 1. Iterative Q&A with confidence scoring
 2. BAML-powered AI interactions
 3. bubbletea TUI for user input
@@ -74,11 +75,13 @@ tui.SuccessStyle  // Bold, green success messages
 Both projects follow this pattern:
 
 1. **Preparation Function** - BAML function generates questions
+
    ```go
    preparation, err := baml_client.PrepareXXX(ctx, input, iteration, previousResponses)
    ```
 
 2. **Convert to TUI Questions**
+
    ```go
    var questions []tui.IterativeQuestion
    for _, q := range preparation.Questions {
@@ -91,6 +94,7 @@ Both projects follow this pattern:
    ```
 
 3. **Run Interactive Form**
+
    ```go
    form.AddQuestions(questions)
    p := tea.NewProgram(form)
@@ -98,6 +102,7 @@ Both projects follow this pattern:
    ```
 
 4. **Check Confidence & Iterate**
+
    ```go
    if !preparation.Needs_more_info {
        break // Sufficient info
@@ -141,6 +146,7 @@ class Question {
 ### Generation Functions
 
 Generation functions should:
+
 - Accept `qa_responses: string[]` containing formatted Q&A pairs
 - Return structured output (e.g., `Presentation`, `JournalEntry`)
 - Use confidence scoring from preparation phase
@@ -315,6 +321,7 @@ type SQLiteStorage struct { ... }
 
 1. Copy `pkg/tui` from `pres`
 2. Update imports:
+
    ```go
    // Old
    import "github.com/geoffjay/kb/internal/tui"
@@ -324,6 +331,7 @@ type SQLiteStorage struct { ... }
    ```
 
 3. Update style references:
+
    ```go
    // Old
    titleStyle := lipgloss.NewStyle()...
@@ -339,6 +347,7 @@ type SQLiteStorage struct { ... }
 To use across multiple projects:
 
 1. Extract to separate repository:
+
    ```bash
    git init go-iterative-tui
    cp -r pkg/tui/* .
@@ -346,6 +355,7 @@ To use across multiple projects:
    ```
 
 2. Use in projects:
+
    ```bash
    go get github.com/yourname/go-iterative-tui
    ```
@@ -358,6 +368,7 @@ To use across multiple projects:
 ## Examples
 
 See:
+
 - `pres/cmd/create.go` - Presentation creation with iterative Q&A
 - `kb/cmd/journal.go` - Journal entry with iterative Q&A
 - `kb/cmd/research.go` - External research with iterative Q&A

@@ -56,6 +56,7 @@ pres update --path my-talk.json "Add an executive summary at the beginning"
 ### 3. Professional HTML Output
 
 Generates production-ready reveal.js presentations:
+
 - Multiple themes
 - Speaker notes
 - Markdown content
@@ -66,16 +67,16 @@ Generates production-ready reveal.js presentations:
 
 Both projects share the same architectural patterns:
 
-| Feature | pres | kb |
-|---------|------|-----|
-| **Domain** | Presentations | Knowledge Base |
-| **Storage** | JSON | Markdown + TOML |
-| **Output** | reveal.js HTML | Zola static site |
-| **Shared TUI** | ✅ `pkg/tui` | ✅ Can use `pkg/tui` |
-| **BAML Functions** | Presentation-specific | Research/Journal-specific |
-| **Iterative Q&A** | ✅ | ✅ |
-| **Confidence Scoring** | ✅ | ✅ |
-| **Update Operations** | Slide modifications | N/A |
+| Feature                | pres                  | kb                        |
+| ---------------------- | --------------------- | ------------------------- |
+| **Domain**             | Presentations         | Knowledge Base            |
+| **Storage**            | JSON                  | Markdown + TOML           |
+| **Output**             | reveal.js HTML        | Zola static site          |
+| **Shared TUI**         | ✅ `pkg/tui`          | ✅ Can use `pkg/tui`      |
+| **BAML Functions**     | Presentation-specific | Research/Journal-specific |
+| **Iterative Q&A**      | ✅                    | ✅                        |
+| **Confidence Scoring** | ✅                    | ✅                        |
+| **Update Operations**  | Slide modifications   | N/A                       |
 
 ## BAML Functions
 
@@ -269,6 +270,7 @@ This project demonstrates:
 4. How to share code between similar projects
 
 The patterns established here can be applied to many other domains:
+
 - Document generation
 - Content creation
 - Data transformation
