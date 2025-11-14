@@ -281,7 +281,7 @@ Feel free to use the shared library (`pkg/tui`) in your own projects.
 
 ## License
 
-MIT
+[MIT](LICENSE)
 
 ## Related Projects
 
