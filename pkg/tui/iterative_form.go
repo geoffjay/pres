@@ -62,6 +62,7 @@ type IterativeFormModel struct {
 	done       bool
 	needsMore  bool // Whether user wants another iteration
 	askingMore bool // Whether we're asking if they want more
+	width      int  // Terminal width for text wrapping
 }
 
 // NewIterativeForm creates a new iterative form
@@ -77,6 +78,7 @@ func NewIterativeForm(title string, config IterationConfig) IterativeFormModel {
 		done:       false,
 		needsMore:  false,
 		askingMore: false,
+		width:      80, // Default width, will be updated by WindowSizeMsg
 	}
 }
 
@@ -93,6 +95,10 @@ func (m IterativeFormModel) Init() tea.Cmd {
 // Update handles messages
 func (m IterativeFormModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
+	case tea.WindowSizeMsg:
+		m.width = msg.Width
+		return m, nil
+
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "ctrl+c", "esc":
@@ -122,17 +128,18 @@ func (m IterativeFormModel) handleEnter() (tea.Model, tea.Cmd) {
 	// Handle "do you need more info?" question
 	if m.askingMore {
 		lower := strings.ToLower(input)
-		if lower == "yes" || lower == "y" {
+		switch lower {
+		case "yes", "y":
 			m.needsMore = true
 			m.askingMore = false
 			m.done = true // Signal to caller to add more questions
 			return m, tea.Quit
-		} else if lower == "no" || lower == "n" {
+		case "no", "n":
 			m.needsMore = false
 			m.askingMore = false
 			m.done = true
 			return m, tea.Quit
-		} else {
+		default:
 			m.err = fmt.Errorf("please answer 'yes' or 'no'")
 			m.input = ""
 			return m, nil
@@ -192,7 +199,7 @@ func (m IterativeFormModel) View() string {
 		b.WriteString("\n")
 		b.WriteString(HelpStyle.Render("(yes/no)"))
 		b.WriteString("\n\n")
-		b.WriteString(InputStyle.Render("> " + m.input + "█"))
+		b.WriteString(renderWrappedInput(m.input, m.width))
 		b.WriteString("\n\n")
 
 		if m.err != nil {
@@ -230,8 +237,8 @@ func (m IterativeFormModel) View() string {
 
 		b.WriteString("\n")
 
-		// Input
-		b.WriteString(InputStyle.Render("> " + m.input + "█"))
+		// Input - use wrapped rendering
+		b.WriteString(renderWrappedInput(m.input, m.width))
 		b.WriteString("\n\n")
 
 		// Error
@@ -320,4 +327,78 @@ func countQuestionsInIteration(questions []IterativeQuestion, iteration int) int
 		}
 	}
 	return count
+}
+
+// renderWrappedInput renders input text with proper wrapping
+func renderWrappedInput(input string, termWidth int) string {
+	if len(input) == 0 {
+		return InputStyle.Render("> █")
+	}
+
+	maxWidth := max(termWidth-6, 40)
+
+	// Split by user newlines
+	userLines := strings.Split(input, "\n")
+	var allLines []string
+
+	for _, line := range userLines {
+		if len(line) == 0 {
+			allLines = append(allLines, "")
+			continue
+		}
+
+		// Wrap long lines
+		wrapped := wrapLineAtWords(line, maxWidth)
+		allLines = append(allLines, wrapped...)
+	}
+
+	// Render with prefix and indentation
+	var b strings.Builder
+	for i, line := range allLines {
+		if i == 0 {
+			b.WriteString(InputStyle.Render("> " + line))
+		} else {
+			b.WriteString(InputStyle.Render("  " + line))
+		}
+
+		if i < len(allLines)-1 {
+			b.WriteString("\n")
+		}
+	}
+
+	b.WriteString(InputStyle.Render("█"))
+	return b.String()
+}
+
+// wrapLineAtWords wraps a line at word boundaries
+func wrapLineAtWords(line string, maxWidth int) []string {
+	if len(line) <= maxWidth {
+		return []string{line}
+	}
+
+	var wrapped []string
+	remaining := line
+
+	for len(remaining) > maxWidth {
+		splitPos := -1
+		for i := min(maxWidth-1, len(remaining)-1); i >= 0; i-- {
+			if remaining[i] == ' ' {
+				splitPos = i
+				break
+			}
+		}
+
+		if splitPos == -1 {
+			splitPos = min(maxWidth, len(remaining))
+		}
+
+		wrapped = append(wrapped, remaining[:splitPos])
+		remaining = strings.TrimLeft(remaining[splitPos:], " ")
+	}
+
+	if len(remaining) > 0 {
+		wrapped = append(wrapped, remaining)
+	}
+
+	return wrapped
 }

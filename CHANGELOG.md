@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2025-11-13
+
+### Fixed
+- **Text Input Wrapping**: Fixed text overflow issue in TUI input fields
+  - Text now wraps properly to the next line when typing long responses
+  - Added dynamic terminal width tracking via `tea.WindowSizeMsg`
+  - Implemented word-boundary wrapping for better readability
+  - Added `renderWrappedInput()` and `wrapLineAtWords()` helper functions
+  - Matches behavior from `contrib/kb` project
+
+### Technical Details
+
+#### Changes to `pkg/tui/iterative_form.go`:
+- Added `width` field to `IterativeFormModel` to track terminal width
+- Handle `tea.WindowSizeMsg` to dynamically update width
+- Replaced simple input rendering with `renderWrappedInput()` calls
+- Implemented intelligent word-wrapping at maxWidth - 6 characters
+
+#### Before:
+```go
+b.WriteString(InputStyle.Render("> " + m.input + "█"))
+```
+
+#### After:
+```go
+b.WriteString(renderWrappedInput(m.input, m.width))
+```
+
+The wrapping function:
+- Splits input by newlines (preserves user's line breaks)
+- Wraps long lines at word boundaries
+- Indents continuation lines with proper spacing
+- Places cursor at the end of wrapped text
+
 ## [0.2.0] - 2025-11-13
 
 ### Fixed

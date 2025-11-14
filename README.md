@@ -20,6 +20,7 @@ go build -o pres .
 
 ## Fixed Issues
 
+- **v0.3.0**: Fixed text input wrapping - text now wraps properly when typing long responses
 - **v0.2.0**: Fixed directory creation bug - now creates full directory path for presentations
 - **v0.2.0**: Added support for loading both wrapped (`PresentationData`) and raw BAML (`Presentation`) JSON formats
 
