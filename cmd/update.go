@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/geoffjay/agar/tui"
 	"github.com/geoffjay/pres/baml_client"
 	"github.com/geoffjay/pres/internal/presentation"
-	"github.com/geoffjay/pres/pkg/tui"
 	"github.com/spf13/cobra"
 )
 

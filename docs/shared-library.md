@@ -11,11 +11,11 @@ Both `pres` and `kb` use similar patterns:
 3. bubbletea TUI for user input
 4. Structured data storage
 
-The shared library (`pkg/tui`) provides reusable components for these patterns.
+The shared library (`agar/tui`) provides reusable components for these patterns.
 
 ## Shared TUI Components
 
-### `pkg/tui/iterative_form.go`
+### `agar/tui/iterative_form.go`
 
 The `IterativeFormModel` provides a complete iterative Q&A system with:
 
@@ -27,7 +27,7 @@ The `IterativeFormModel` provides a complete iterative Q&A system with:
 **Example Usage:**
 
 ```go
-import "github.com/geoffjay/pres/pkg/tui"
+import "github.com/geoffjay/agar/tui"
 
 config := tui.IterationConfig{
     MaxIterations:    3,
@@ -183,14 +183,12 @@ cp ../pres/baml_src/generators.baml baml_src/
 vim baml_src/my_domain.baml
 ```
 
-### 2. Copy TUI Package
+### 2. Add agar Dependency
 
 ```bash
-# Copy the entire TUI package
-cp -r ../pres/pkg/tui pkg/
+# Add the agar library
+go get github.com/geoffjay/agar/tui
 ```
-
-Or add as a Go module dependency if you publish it.
 
 ### 3. Create Domain Logic
 
@@ -319,7 +317,7 @@ type SQLiteStorage struct { ... }
 
 ### Migrating `kb` to Use Shared Library
 
-1. Copy `pkg/tui` from `pres`
+1. Copy `agar/tui` from `pres`
 2. Update imports:
 
    ```go
@@ -327,7 +325,7 @@ type SQLiteStorage struct { ... }
    import "github.com/geoffjay/kb/internal/tui"
 
    // New
-   import "github.com/geoffjay/pres/pkg/tui"
+   import "github.com/geoffjay/pres/agar/tui"
    ```
 
 3. Update style references:
@@ -350,7 +348,7 @@ To use across multiple projects:
 
    ```bash
    git init go-iterative-tui
-   cp -r pkg/tui/* .
+   cp -r agar/tui/* .
    go mod init github.com/yourname/go-iterative-tui
    ```
 

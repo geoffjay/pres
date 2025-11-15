@@ -2,7 +2,15 @@
 
 # generated files
 pres
-presentations
+build/
+presentations/*.json
+presentations/*.html
+examples/input_components
+examples/question_components
+
+# Test coverage
+coverage.out
+coverage.html
 
 # AI
 .claude/settings.local.json

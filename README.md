@@ -14,12 +14,33 @@ reveal.js.
 
 ## Installation
 
+### Using Make (Recommended)
+
+```bash
+# Build main binary
+make build
+
+# Build all examples
+make examples
+
+# Build everything
+make build-all
+
+# See all available targets
+make help
+```
+
+### Manual Build
+
 ```bash
 go build -o pres .
 ```
 
-## Fixed Issues
+## Version History
 
+- **v0.6.0**: Migrated to [agar](https://github.com/geoffjay/agar) library - TUI components now external dependency
+- **v0.5.0**: Renamed components to "input" terminology for better genericity (NewYesNoInput, NewTextInput, NewOptionsInput)
+- **v0.4.0**: Added reusable input components (YesNoModel, TextModel, OptionsModel) + comprehensive Makefile
 - **v0.3.0**: Fixed text input wrapping - text now wraps properly when typing long responses
 - **v0.2.0**: Fixed directory creation bug - now creates full directory path for presentations
 - **v0.2.0**: Added support for loading both wrapped (`PresentationData`) and raw BAML (`Presentation`) JSON formats
@@ -189,10 +210,32 @@ The AI assigns a confidence score at each iteration. If confidence is high enoug
 
 ## Shared Library
 
-The `pkg/tui` package contains reusable TUI components that can be used in other projects:
+This project uses the [agar](https://github.com/geoffjay/agar) library for reusable TUI components.
+
+### Input Components
+
+Individual input components for specific input types:
+
+- **`YesNoModel`** - Yes/No input with checkbox-style selection
+- **`TextModel`** - Single-line and multi-line text input with wrapping
+- **`OptionsModel`** - Multiple choice input with radio buttons
+
+See [agar documentation](https://github.com/geoffjay/agar) for complete API reference and `examples/input_components.go` for usage examples.
+
+```bash
+# Try the examples
+make run-examples
+
+# Or manually
+go run examples/input_components.go
+```
+
+### Iterative Form
+
+High-level iterative Q&A system:
 
 ```go
-import "github.com/geoffjay/pres/pkg/tui"
+import "github.com/geoffjay/agar/tui"
 
 config := tui.IterationConfig{
     MaxIterations:    3,
@@ -203,10 +246,62 @@ form := tui.NewIterativeForm("My Form", config)
 // Add questions and run...
 ```
 
+## Makefile Commands
+
+The project includes a comprehensive Makefile for common tasks:
+
+### Build Commands
+- `make build` - Build the main `pres` binary
+- `make examples` - Build all example programs
+- `make build-all` - Build both main binary and examples
+- `make rebuild` - Clean and rebuild everything
+
+### Development
+- `make dev` - Development mode with helpful command suggestions
+- `make watch` - Auto-rebuild on file changes (requires `entr`)
+- `make run-examples` - Build and run the question components demo
+
+### Testing & Quality
+- `make test` - Run all tests
+- `make test-coverage` - Generate test coverage report
+- `make check` - Run formatters, linters, and tests
+- `make fmt` - Format Go code
+- `make lint` - Run linters (requires `golangci-lint`)
+
+### Code Generation
+- `make baml` - Generate BAML client code
+- `make tidy` - Tidy Go modules
+
+### Maintenance
+- `make clean` - Remove build artifacts
+- `make clean-all` - Remove all generated files including BAML client
+- `make deps` - Show project dependencies
+- `make update-deps` - Update all dependencies
+- `make version` - Show version information
+
+### Installation
+- `make install` - Install binary to `$GOPATH/bin`
+
+### Quick Start
+- `make all` - Full build: clean, generate BAML, build everything, test
+- `make help` - Show all available targets
+
+**Examples:**
+```bash
+# Quick development workflow
+make build-all && make run-examples
+
+# Before committing
+make check
+
+# Full clean build
+make all
+```
+
 ## Architecture
 
 - **BAML Functions** (`baml_src/presentations.baml`) - AI prompts for generation
-- **Shared TUI** (`pkg/tui/`) - Reusable interactive form components
+- **TUI Library** ([agar](https://github.com/geoffjay/agar)) - Reusable interactive input components
 - **Internal Packages** (`internal/presentation/`) - Core logic
   - `writer.go` - JSON storage and updates
   - `generator.go` - HTML generation
@@ -286,6 +381,7 @@ Feel free to use the shared library (`pkg/tui`) in your own projects.
 
 ## Related Projects
 
+- [agar](https://github.com/geoffjay/agar) - Reusable TUI input components library
 - [kb](contrib/kb) - Knowledge base CLI using similar patterns
 - [reveal.js](https://revealjs.com/) - The presentation framework we generate for
 - [BAML](https://www.boundaryml.com/) - Structured AI interactions

@@ -12,9 +12,6 @@ pres/
 │   ├── presentations.baml    # AI functions for presentation generation
 │   ├── clients.baml          # AI model configurations
 │   └── generators.baml       # BAML code generation config
-├── pkg/
-│   └── tui/
-│       └── iterative_form.go # Reusable TUI components (SHARED)
 ├── internal/
 │   └── presentation/
 │       ├── writer.go         # JSON storage and updates
@@ -24,7 +21,13 @@ pres/
 │   ├── create.go            # Create presentations
 │   ├── update.go            # Update presentations
 │   └── generate.go          # Generate HTML
+├── examples/
+│   └── input_components.go  # Example usage of agar/tui
 └── baml_client/             # Generated BAML client code
+
+Dependencies:
+├── github.com/geoffjay/agar/tui  # Reusable TUI input components (SHARED)
+└── github.com/boundaryml/baml    # Structured AI interactions
 ```
 
 ## Key Features
